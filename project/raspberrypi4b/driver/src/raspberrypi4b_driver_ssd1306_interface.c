@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2015 - present LibDriver All rights reserved
- * 
+ *
  * The MIT License (MIT)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -19,7 +19,7 @@
  * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.i 
+ * SOFTWARE.i
  *
  * @file      raspberrypi4b_driver_ssd1306_interface.c
  * @brief     raspberrypi4b driver ssd1306 interface source file
@@ -44,22 +44,22 @@
 /**
  * @brief iic device name definition
  */
-#define IIC_DEVICE_NAME "/dev/i2c-1"        /**< iic device name */
+#define IIC_DEVICE_NAME "/dev/i2c-1" /**< iic device name */
 
 /**
  * @brief spi device name definition
  */
-#define SPI_DEVICE_NAME "/dev/spidev0.0"    /**< spi device name */
+#define SPI_DEVICE_NAME "/dev/spidev0.0" /**< spi device name */
 
 /**
  * @brief iic device handle definition
  */
-static int gs_iic_fd;                       /**< iic handle */
+static int gs_iic_fd; /**< iic handle */
 
 /**
  * @brief spi device handle definition
  */
-static int gs_spi_fd;                       /**< spi handle */
+static int gs_spi_fd; /**< spi handle */
 
 /**
  * @brief  interface iic bus init
@@ -70,7 +70,7 @@ static int gs_spi_fd;                       /**< spi handle */
  */
 uint8_t ssd1306_interface_iic_init(void)
 {
-    return iic_init(IIC_DEVICE_NAME, &gs_iic_fd);
+	return iic_init(IIC_DEVICE_NAME, &gs_iic_fd);
 }
 
 /**
@@ -82,7 +82,7 @@ uint8_t ssd1306_interface_iic_init(void)
  */
 uint8_t ssd1306_interface_iic_deinit(void)
 {
-    return iic_deinit(gs_iic_fd);
+	return iic_deinit(gs_iic_fd);
 }
 
 /**
@@ -96,9 +96,10 @@ uint8_t ssd1306_interface_iic_deinit(void)
  *            - 1 write failed
  * @note      none
  */
-uint8_t ssd1306_interface_iic_write(uint8_t addr, uint8_t reg, uint8_t *buf, uint16_t len)
+uint8_t ssd1306_interface_iic_write(uint8_t addr, uint8_t reg, uint8_t *buf,
+				    uint16_t len)
 {
-    return iic_write(gs_iic_fd, addr, reg, buf, len);
+	return iic_write(gs_iic_fd, addr, reg, buf, len);
 }
 
 /**
@@ -110,7 +111,8 @@ uint8_t ssd1306_interface_iic_write(uint8_t addr, uint8_t reg, uint8_t *buf, uin
  */
 uint8_t ssd1306_interface_spi_init(void)
 {
-    return spi_init(SPI_DEVICE_NAME, &gs_spi_fd, SPI_MODE_TYPE_3, 1000 * 1000 * 2);
+	return spi_init(SPI_DEVICE_NAME, &gs_spi_fd, SPI_MODE_TYPE_3,
+			1000 * 1000 * 2);
 }
 
 /**
@@ -122,7 +124,7 @@ uint8_t ssd1306_interface_spi_init(void)
  */
 uint8_t ssd1306_interface_spi_deinit(void)
 {
-    return spi_deinit(gs_spi_fd);
+	return spi_deinit(gs_spi_fd);
 }
 
 /**
@@ -136,7 +138,7 @@ uint8_t ssd1306_interface_spi_deinit(void)
  */
 uint8_t ssd1306_interface_spi_write_cmd(uint8_t *buf, uint16_t len)
 {
-    return spi_write_cmd(gs_spi_fd, buf, len);
+	return spi_write_cmd(gs_spi_fd, buf, len);
 }
 
 /**
@@ -146,7 +148,7 @@ uint8_t ssd1306_interface_spi_write_cmd(uint8_t *buf, uint16_t len)
  */
 void ssd1306_interface_delay_ms(uint32_t ms)
 {
-    usleep(1000 * ms);
+	usleep(1000 * ms);
 }
 
 /**
@@ -156,17 +158,17 @@ void ssd1306_interface_delay_ms(uint32_t ms)
  */
 void ssd1306_interface_debug_print(const char *const fmt, ...)
 {
-    char str[256];
-    uint16_t len;
-    va_list args;
-    
-    memset((char *)str, 0, sizeof(char) * 256); 
-    va_start(args, fmt);
-    vsnprintf((char *)str, 255, (char const *)fmt, args);
-    va_end(args);
-    
-    len = strlen((char *)str);
-    (void)printf((uint8_t *)str, len);
+	char str[256];
+	uint16_t len;
+	va_list args;
+
+	memset((char *)str, 0, sizeof(char) * 256);
+	va_start(args, fmt);
+	vsnprintf((char *)str, 255, (char const *)fmt, args);
+	va_end(args);
+
+	len = strlen((char *)str);
+	(void)printf((uint8_t *)str, len);
 }
 
 /**
@@ -178,7 +180,7 @@ void ssd1306_interface_debug_print(const char *const fmt, ...)
  */
 uint8_t ssd1306_interface_spi_cmd_data_gpio_init(void)
 {
-    return wire_init();
+	return wire_init();
 }
 
 /**
@@ -190,7 +192,7 @@ uint8_t ssd1306_interface_spi_cmd_data_gpio_init(void)
  */
 uint8_t ssd1306_interface_spi_cmd_data_gpio_deinit(void)
 {
-    return wire_deinit();
+	return wire_deinit();
 }
 
 /**
@@ -203,7 +205,7 @@ uint8_t ssd1306_interface_spi_cmd_data_gpio_deinit(void)
  */
 uint8_t ssd1306_interface_spi_cmd_data_gpio_write(uint8_t value)
 {
-    return wire_write(value);
+	return wire_write(value);
 }
 
 /**
@@ -215,7 +217,7 @@ uint8_t ssd1306_interface_spi_cmd_data_gpio_write(uint8_t value)
  */
 uint8_t ssd1306_interface_reset_gpio_init(void)
 {
-    return wire_clock_init();
+	return wire_clock_init();
 }
 
 /**
@@ -227,7 +229,7 @@ uint8_t ssd1306_interface_reset_gpio_init(void)
  */
 uint8_t ssd1306_interface_reset_gpio_deinit(void)
 {
-    return wire_clock_deinit();
+	return wire_clock_deinit();
 }
 
 /**
@@ -240,5 +242,5 @@ uint8_t ssd1306_interface_reset_gpio_deinit(void)
  */
 uint8_t ssd1306_interface_reset_gpio_write(uint8_t value)
 {
-    return wire_clock_write(value);
+	return wire_clock_write(value);
 }

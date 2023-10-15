@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2015 - present LibDriver All rights reserved
- * 
+ *
  * The MIT License (MIT)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -19,7 +19,7 @@
  * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE. 
+ * SOFTWARE.
  *
  * @file      main.c
  * @brief     main source file
@@ -54,7 +54,7 @@ volatile uint16_t g_len;                         /**< uart buffer length */
 static int gs_listen_fd;                         /**< network handle */
 static int gs_conn_fd;                           /**< network handle */
 static struct sockaddr_in gs_server_addr;        /**< server address */
-
+#define SSD1306_I2C_ADDR 0x3c
 /**
  * @brief     ssd1306 full function
  * @param[in] argc is arg numbers
@@ -96,7 +96,7 @@ uint8_t ssd1306(uint8_t argc, char** argv)
         {NULL, 0, NULL, 0},
     };
     char type[33] = "unknown";
-    ssd1306_address_t addr = SSD1306_ADDR_SA0_0;
+    ssd1306_address_t addr = SSD1306_I2C_ADDR;
     ssd1306_scroll_frame_t frame = SSD1306_SCROLL_FRAME_2;
     ssd1306_interface_t interface = SSD1306_INTERFACE_IIC;
     ssd1306_fade_blinking_mode_t mode = SSD1306_FADE_BLINKING_MODE_DISABLE;
@@ -119,23 +119,23 @@ uint8_t ssd1306(uint8_t argc, char** argv)
     uint8_t y2_flag = 0;
     uint8_t color_flag = 0;
     char str[49] = "libdriver";
-    
+
     /* if no params */
     if (argc == 1)
     {
         /* goto the help */
         goto help;
     }
-    
+
     /* init 0 */
     optind = 0;
-    
+
     /* parse */
     do
     {
         /* parse the args */
         c = getopt_long(argc, argv, short_options, long_options, &longindex);
-        
+
         /* judge the result */
         switch (c)
         {
@@ -145,50 +145,50 @@ uint8_t ssd1306(uint8_t argc, char** argv)
                 /* set the type */
                 memset(type, 0, sizeof(char) * 33);
                 snprintf(type, 32, "h");
-                
+
                 break;
             }
-            
+
             /* information */
             case 'i' :
             {
                 /* set the type */
                 memset(type, 0, sizeof(char) * 33);
                 snprintf(type, 32, "i");
-                
+
                 break;
             }
-            
+
             /* port */
             case 'p' :
             {
                 /* set the type */
                 memset(type, 0, sizeof(char) * 33);
                 snprintf(type, 32, "p");
-                
+
                 break;
             }
-            
+
             /* example */
             case 'e' :
             {
                 /* set the type */
                 memset(type, 0, sizeof(char) * 33);
                 snprintf(type, 32, "e_%s", optarg);
-                
+
                 break;
             }
-            
+
             /* test */
             case 't' :
             {
                 /* set the type */
                 memset(type, 0, sizeof(char) * 33);
                 snprintf(type, 32, "t_%s", optarg);
-                
+
                 break;
             }
-            
+
             /* addr */
             case 1 :
             {
@@ -205,10 +205,10 @@ uint8_t ssd1306(uint8_t argc, char** argv)
                 {
                     return 5;
                 }
-                
+
                 break;
             }
-            
+
             /* color */
             case 2 :
             {
@@ -227,10 +227,10 @@ uint8_t ssd1306(uint8_t argc, char** argv)
                 {
                     return 5;
                 }
-                
+
                 break;
             }
-            
+
             /* frame */
             case 3 :
             {
@@ -271,19 +271,19 @@ uint8_t ssd1306(uint8_t argc, char** argv)
                 {
                     return 5;
                 }
-                
+
                 break;
             }
-             
+
             /* frames */
             case 4 :
             {
                 /* set the frames */
                 frames = atol(optarg);
-                
+
                 break;
             }
-            
+
             /* interface */
             case 5 :
             {
@@ -300,10 +300,10 @@ uint8_t ssd1306(uint8_t argc, char** argv)
                 {
                     return 5;
                 }
-                
+
                 break;
             }
-            
+
             /* mode */
             case 6 :
             {
@@ -324,74 +324,74 @@ uint8_t ssd1306(uint8_t argc, char** argv)
                 {
                     return 5;
                 }
-                
+
                 break;
-            } 
-            
+            }
+
             /* row */
             case 7 :
             {
                 /* set the row */
                 row = atol(optarg);
-                
+
                 break;
             }
-            
+
             /* start */
             case 8 :
             {
                 /* set the start */
                 start = atol(optarg);
-                
+
                 break;
             }
-            
+
             /* stop */
             case 9 :
             {
                 /* set the stop */
                 stop = atol(optarg);
-                
+
                 break;
             }
-            
+
             /* str */
             case 10 :
             {
                 /* set the str */
                 memset(str, 0, sizeof(char) * 49);
                 strncpy(str, optarg, 48);
-                
+
                 break;
             }
-            
+
             /* x0 */
             case 11 :
             {
                 /* convert */
                 x0 = atol(optarg);
                 x0_flag = 1;
-                
+
                 break;
             }
-            
+
             /* x1 */
             case 12 :
             {
                 /* convert */
                 x1 = atol(optarg);
                 x1_flag = 1;
-                
+
                 break;
             }
-            
+
             /* x2 */
             case 13 :
             {
                 /* convert */
                 x2 = atol(optarg);
                 x2_flag = 1;
-                
+
                 break;
             }
             /* y0 */
@@ -400,36 +400,36 @@ uint8_t ssd1306(uint8_t argc, char** argv)
                 /* convert */
                 y0 = atol(optarg);
                 y0_flag = 1;
-                
+
                 break;
             }
-            
+
             /* y1 */
             case 15 :
             {
                 /* convert */
                 y1 = atol(optarg);
                 y1_flag = 1;
-                
+
                 break;
             }
-            
+
             /* y2 */
             case 16 :
             {
                 /* convert */
                 y2 = atol(optarg);
                 y2_flag = 1;
-                
+
                 break;
             }
-            
+
             /* the end */
             case -1 :
             {
                 break;
             }
-            
+
             /* others */
             default :
             {
@@ -437,7 +437,7 @@ uint8_t ssd1306(uint8_t argc, char** argv)
             }
         }
     } while (c != -1);
-    
+
     /* run the function */
     if (strcmp("t_display", type) == 0)
     {
@@ -454,123 +454,123 @@ uint8_t ssd1306(uint8_t argc, char** argv)
     else if (strcmp("e_basic-str", type) == 0)
     {
         uint8_t res;
-        
+
         /* clear */
         res = ssd1306_basic_clear();
         if (res != 0)
         {
             ssd1306_interface_debug_print("ssd1306: clear screen failed.\n");
             (void)ssd1306_basic_deinit();
-            
+
             return 1;
         }
-        
+
         /* set the string */
         res = ssd1306_basic_string(0, 0, str, (uint16_t)strlen(str), color, SSD1306_FONT_16);
         if (res != 0)
         {
             ssd1306_interface_debug_print("ssd1306: show string failed.\n");
             (void)ssd1306_basic_deinit();
-            
+
             return 1;
         }
-        
+
         /* output */
         ssd1306_interface_debug_print("ssd1306: %s.\n", str);
-        
+
         return 0;
     }
     else if (strcmp("e_basic-init", type) == 0)
     {
         uint8_t res;
-        
+
         /* init */
         res = ssd1306_basic_init(interface, addr);
         if (res != 0)
         {
             (void)ssd1306_basic_deinit();
-            
+
             return 1;
         }
-        
+
         /* output */
         ssd1306_interface_debug_print("ssd1306: ssd1306: init success.\n");
-        
+
         return 0;
     }
     else if (strcmp("e_basic-display-off", type) == 0)
     {
         uint8_t res;
-        
+
         /* display off */
         res = ssd1306_basic_display_off();
         if (res != 0)
         {
             ssd1306_interface_debug_print("ssd1306: display off failed.\n");
             (void)ssd1306_basic_deinit();
-            
+
             return 1;
         }
-        
+
         /* output */
         ssd1306_interface_debug_print("ssd1306: display off.\n");
-        
+
         return 0;
     }
     else if (strcmp("e_basic-display-on", type) == 0)
     {
         uint8_t res;
-        
+
         /* display on */
         res = ssd1306_basic_display_on();
         if (res != 0)
         {
             ssd1306_interface_debug_print("ssd1306: display on failed.\n");
             (void)ssd1306_basic_deinit();
-            
+
             return 1;
         }
-        
+
         /* output */
         ssd1306_interface_debug_print("ssd1306: display on.\n");
-        
+
         return 0;
     }
     else if (strcmp("e_basic-clear", type) == 0)
     {
         uint8_t res;
-        
+
         /* clear */
         res = ssd1306_basic_clear();
         if (res != 0)
         {
             ssd1306_interface_debug_print("ssd1306: clear screen failed.\n");
             (void)ssd1306_basic_deinit();
-            
+
             return 1;
         }
-        
+
         /* output */
         ssd1306_interface_debug_print("ssd1306: clear screen.\n");
-        
+
         return 0;
     }
     else if (strcmp("e_basic-deinit", type) == 0)
     {
         uint8_t res;
-        
+
         /* deinit */
         res = ssd1306_basic_deinit();
         if (res != 0)
         {
             ssd1306_interface_debug_print("ssd1306: deinit failed.\n");
-            
+
             return 1;
         }
-        
+
         /* output */
         ssd1306_interface_debug_print("ssd1306: deinit ssd1306.\n");
-        
+
         return 0;
     }
     else if (strcmp("e_basic-point", type) == 0)
@@ -579,37 +579,37 @@ uint8_t ssd1306(uint8_t argc, char** argv)
         {
             uint8_t res;
             uint8_t data;
-            
+
             /* read point */
             res = ssd1306_basic_read_point(x0, y0, (uint8_t*)&data);
             if (res != 0)
             {
                 (void)ssd1306_basic_deinit();
-                
+
                 return 1;
             }
-            
+
             /* output */
             ssd1306_interface_debug_print("ssd1306: read point %d %d is %d.\n", x0, y0, data);
-            
+
             return 0;
         }
         else if ((x0_flag == 1) && (y0_flag == 1) && (color_flag == 1))
         {
             uint8_t res;
-            
+
             /* write point */
             res = ssd1306_basic_write_point(x0, y0, color);
             if (res != 0)
             {
                 (void)ssd1306_basic_deinit();
-                
+
                 return 1;
             }
-            
+
             /* output */
             ssd1306_interface_debug_print("ssd1306: write point %d %d %d.\n", x0, y0, color);
-            
+
             return 0;
         }
         else
@@ -620,72 +620,72 @@ uint8_t ssd1306(uint8_t argc, char** argv)
     else if (strcmp("e_basic-rect", type) == 0)
     {
         uint8_t res;
-        
+
         /* check the flag */
         if ((x1_flag != 1) || (y1_flag != 1) || (x2_flag != 1) || (y2_flag != 1))
         {
              return 5;
         }
-        
+
         /* rect */
         res = ssd1306_basic_rect(x1, y1, x2, y2, color);
         if (res != 0)
         {
             (void)ssd1306_basic_deinit();
-            
+
             return 1;
         }
-        
+
         /* output */
         ssd1306_interface_debug_print("ssd1306: draw rect %d %d %d %d.\n", x1, y1, x2, y2);
-        
+
         return 0;
     }
     else if (strcmp("e_advance-init", type) == 0)
     {
         uint8_t res;
-        
+
         /* init */
         res = ssd1306_advance_init(interface, addr);
         if (res != 0)
         {
             (void)ssd1306_advance_deinit();
-            
+
             return 1;
         }
-        
+
         /* output */
         ssd1306_interface_debug_print("ssd1306: ssd1306: init success.\n");
-        
+
         return 0;
     }
     else if (strcmp("e_advance-str", type) == 0)
     {
         uint8_t res;
-        
+
         /* clear */
         res = ssd1306_advance_clear();
         if (res != 0)
         {
             ssd1306_interface_debug_print("ssd1306: clear screen failed.\n");
             (void)ssd1306_advance_deinit();
-            
+
             return 1;
         }
-        
+
         /* set the string */
         res = ssd1306_advance_string(0, 0, str, (uint16_t)strlen(str), color, SSD1306_FONT_16);
         if (res != 0)
         {
             ssd1306_interface_debug_print("ssd1306: show string failed.\n");
             (void)ssd1306_advance_deinit();
-            
+
             return 1;
         }
-        
+
         /* output */
         ssd1306_interface_debug_print("ssd1306: %s.\n", str);
-        
+
         return 0;
     }
     else if (strcmp("e_advance-display-off", type) == 0)
@@ -698,51 +698,51 @@ uint8_t ssd1306(uint8_t argc, char** argv)
         {
             ssd1306_interface_debug_print("ssd1306: display off failed.\n");
             (void)ssd1306_advance_deinit();
-            
+
             return 1;
         }
-        
+
         /* output */
         ssd1306_interface_debug_print("ssd1306: display off.\n");
-        
+
         return 0;
     }
     else if (strcmp("e_advance-display-on", type) == 0)
     {
         uint8_t res;
-        
+
         /* display on */
         res = ssd1306_advance_display_on();
         if (res != 0)
         {
             ssd1306_interface_debug_print("ssd1306: display on failed.\n");
             (void)ssd1306_advance_deinit();
-            
+
             return 1;
         }
-        
+
         /* output */
         ssd1306_interface_debug_print("ssd1306: display on.\n");
-        
+
         return 0;
     }
     else if (strcmp("e_advance-clear", type) == 0)
     {
         uint8_t res;
-        
+
         /* clear */
         res = ssd1306_advance_clear();
         if (res != 0)
         {
             ssd1306_interface_debug_print("ssd1306: clear screen failed.\n");
             (void)ssd1306_advance_deinit();
-            
+
             return 1;
         }
-        
+
         /* output */
         ssd1306_interface_debug_print("ssd1306: clear screen.\n");
-        
+
         return 0;
     }
     else if (strcmp("e_advance-point", type) == 0)
@@ -751,37 +751,37 @@ uint8_t ssd1306(uint8_t argc, char** argv)
         {
             uint8_t res;
             uint8_t data;
-            
+
             /* read point */
             res = ssd1306_advance_read_point(x0, y0, (uint8_t*)&data);
             if (res != 0)
             {
                 (void)ssd1306_advance_deinit();
-                
+
                 return 1;
             }
-            
+
             /* output */
             ssd1306_interface_debug_print("ssd1306: read point %d %d is %d.\n", x0, y0, data);
-            
+
             return 0;
         }
         else if ((x0_flag == 1) && (y0_flag == 1) && (color_flag == 1))
         {
             uint8_t res;
-            
+
             /* write point */
             res = ssd1306_advance_write_point(x0, y0, color);
             if (res != 0)
             {
                 (void)ssd1306_advance_deinit();
-                
+
                 return 1;
             }
-            
+
             /* output */
             ssd1306_interface_debug_print("ssd1306: write point %d %d %d.\n", x0, y0, color);
-            
+
             return 0;
         }
         else
@@ -798,146 +798,146 @@ uint8_t ssd1306(uint8_t argc, char** argv)
         {
              return 5;
         }
-         
+
         /* rect */
         res = ssd1306_advance_rect(x1, y1, x2, y2, color);
         if (res != 0)
         {
             (void)ssd1306_advance_deinit();
-            
+
             return 1;
         }
-        
+
         /* output */
         ssd1306_interface_debug_print("ssd1306: draw rect %d %d %d %d.\n", x1, y1, x2, y2);
-        
+
         return 0;
     }
     else if (strcmp("e_advance-deinit", type) == 0)
     {
         uint8_t res;
-        
+
         /* deinit */
         res = ssd1306_advance_deinit();
         if (res != 0)
         {
             ssd1306_interface_debug_print("ssd1306: deinit failed.\n");
-            
+
             return 1;
         }
-        
+
         /* output */
         ssd1306_interface_debug_print("ssd1306: deinit ssd1306.\n");
-        
+
         return 0;
     }
     else if (strcmp("e_advance-enable-zoom", type) == 0)
     {
         uint8_t res;
-        
+
         /* enable */
         res = ssd1306_advance_enable_zoom_in();
         if (res != 0)
         {
             ssd1306_interface_debug_print("ssd1306: enable zoom in failed.\n");
-            
+
             return 1;
         }
-        
+
         /* output */
         ssd1306_interface_debug_print("ssd1306: enable zoom in.\n");
-        
+
         return 0;
     }
     else if (strcmp("e_advance-disable-zoom", type) == 0)
     {
         uint8_t res;
-        
+
         /* disable */
         res = ssd1306_advance_disable_zoom_in();
         if (res != 0)
         {
             ssd1306_interface_debug_print("ssd1306: disable zoom in failed.\n");
-            
+
             return 1;
         }
-        
+
         /* output */
         ssd1306_interface_debug_print("ssd1306: disable zoom in.\n");
-        
+
         return 0;
     }
     else if (strcmp("e_advance-fade-blinking", type) == 0)
     {
         uint8_t res;
         char str_s[4][16] = { "disable", "", "fade out", "blinking" };
-        
+
         /* fade blinking */
         res = ssd1306_advance_fade_blinking(mode, frames);
         if (res != 0)
         {
             (void)ssd1306_advance_deinit();
-            
+
             return 1;
         }
-        
+
         /* output */
         ssd1306_interface_debug_print("ssd1306: set fade blinking %s mode with %d frames.\n", str_s[(uint8_t)mode], frames);
-        
+
         return 0;
     }
     else if (strcmp("e_advance-deactivate-scroll", type) == 0)
     {
         uint8_t res;
-        
+
         /* deactivate */
         res = ssd1306_advance_deactivate_scroll();
         if (res != 0)
         {
             ssd1306_interface_debug_print("ssd1306: deactivate scroll failed.\n");
-            
+
             return 1;
         }
-        
+
         /* output */
         ssd1306_interface_debug_print("ssd1306: deactivate scroll.\n");
-        
+
         return 0;
     }
     else if (strcmp("e_advance-left-scroll", type) == 0)
     {
         uint8_t res;
-        
+
         /* left scroll */
         res = ssd1306_advance_vertical_left_horizontal_scroll(start, stop, row, frame);
         if (res != 0)
         {
             (void)ssd1306_advance_deinit();
-            
+
             return 1;
         }
-        
+
         /* output */
         ssd1306_interface_debug_print("ssd1306: vertical left horizontal scroll start stop rows frames %d %d %d.\n", start, stop, row);
-        
+
         return 0;
     }
     else if (strcmp("e_advance-right-scroll", type) == 0)
     {
         uint8_t res;
-        
+
         /* right scroll */
         res = ssd1306_advance_vertical_right_horizontal_scroll(start, stop, row, frame);
         if (res != 0)
         {
             (void)ssd1306_advance_deinit();
-            
+
             return 1;
         }
-        
+
         /* output */
         ssd1306_interface_debug_print("ssd1306: vertical right horizontal scroll start stop rows frames %d %d %d.\n", start, stop, row);
-        
+
         return 0;
     }
     else if (strcmp("h", type) == 0)
@@ -1004,13 +1004,13 @@ uint8_t ssd1306(uint8_t argc, char** argv)
         ssd1306_interface_debug_print("      --y0=<y0>           Set the y0 and it is the y of the point.\n");
         ssd1306_interface_debug_print("      --y1=<y1>           Set the y1 and it is the top left y of the rect.\n");
         ssd1306_interface_debug_print("      --y2=<y2>           Set the y2 and it is the bottom right y of the rect.\n");
-        
+
         return 0;
     }
     else if (strcmp("i", type) == 0)
     {
         ssd1306_info_t info;
-        
+
         /* print ssd1306 info */
         ssd1306_info(&info);
         ssd1306_interface_debug_print("ssd1306: chip is %s.\n", info.chip_name);
@@ -1022,7 +1022,7 @@ uint8_t ssd1306(uint8_t argc, char** argv)
         ssd1306_interface_debug_print("ssd1306: max current is %0.2fmA.\n", info.max_current_ma);
         ssd1306_interface_debug_print("ssd1306: max temperature is %0.1fC.\n", info.temperature_max);
         ssd1306_interface_debug_print("ssd1306: min temperature is %0.1fC.\n", info.temperature_min);
-        
+
         return 0;
     }
     else if (strcmp("p", type) == 0)
@@ -1036,7 +1036,7 @@ uint8_t ssd1306(uint8_t argc, char** argv)
         ssd1306_interface_debug_print("ssd1306: SPI interface reset GPIO connected to GPIO27(BCM).\n");
         ssd1306_interface_debug_print("ssd1306: IIC interface SCL connected to GPIO3(BCM).\n");
         ssd1306_interface_debug_print("ssd1306: IIC interface SDA connected to GPIO2(BCM).\n");
-        
+
         return 0;
     }
     else
@@ -1055,50 +1055,50 @@ uint8_t ssd1306(uint8_t argc, char** argv)
 static uint8_t a_socket_init(void)
 {
     int optval;
-    
+
     /* creat a socket */
     gs_listen_fd = socket(AF_INET, SOCK_STREAM, 0);
-    if (gs_listen_fd < 0) 
+    if (gs_listen_fd < 0)
     {
         ssd1306_interface_debug_print("ssd1306: create socket failed.\n");
-        
+
         return 1;
     }
-    
+
     /* set the server port */
     memset(&gs_server_addr, 0, sizeof(gs_server_addr));
     gs_server_addr.sin_family = AF_INET;
     gs_server_addr.sin_addr.s_addr = htonl(INADDR_ANY);
     gs_server_addr.sin_port = htons(6666);
-    
+
     /* enable same port binding */
     optval = 1;
     if (setsockopt(gs_listen_fd, SOL_SOCKET, SO_REUSEADDR, (char *)&optval, sizeof(optval)) < 0)
     {
         ssd1306_interface_debug_print("ssd1306: create socket failed.\n");
         (void)close(gs_listen_fd);
-        
+
         return 1;
     }
-    
+
     /* bind the port */
-    if (bind(gs_listen_fd, (struct sockaddr*)&gs_server_addr, sizeof(gs_server_addr)) < 0) 
+    if (bind(gs_listen_fd, (struct sockaddr*)&gs_server_addr, sizeof(gs_server_addr)) < 0)
     {
         ssd1306_interface_debug_print("ssd1306: bind failed.\n");
         (void)close(gs_listen_fd);
-        
+
         return 1;
     }
-    
+
     /* listen the port */
-    if (listen(gs_listen_fd, 10) < 0) 
+    if (listen(gs_listen_fd, 10) < 0)
     {
         ssd1306_interface_debug_print("ssd1306: listen failed.\n");
         (void)close(gs_listen_fd);
-        
+
         return 1;
-    } 
-    
+    }
+
     return 0;
 }
 
@@ -1114,23 +1114,23 @@ static uint8_t a_socket_init(void)
 static uint16_t a_socket_read(uint8_t *buf, uint16_t len)
 {
     int n;
-    
+
     /* wait data */
     gs_conn_fd = accept(gs_listen_fd, (struct sockaddr *)NULL, NULL);
-    if (gs_conn_fd < 0) 
+    if (gs_conn_fd < 0)
     {
         ssd1306_interface_debug_print("ssd1306: accept failed.\n");
         (void)close(gs_conn_fd);
 
         return 1;
     }
-    
+
     /* read data */
     n = recv(gs_conn_fd, buf, len, 0);
-    
+
     /* close the socket */
     (void)close(gs_conn_fd);
-    
+
     return n;
 }
 
@@ -1147,7 +1147,7 @@ static void a_sig_handler(int signum)
         (void)close(gs_listen_fd);
         exit(0);
     }
-    
+
     return;
 }
 
@@ -1158,24 +1158,24 @@ static void a_sig_handler(int signum)
 int main(void)
 {
     uint8_t res;
-    
+
     /* socket init*/
     res = a_socket_init();
     if (res != 0)
     {
         ssd1306_interface_debug_print("ssd1306: socket init failed.\n");
-        
+
         return 1;
     }
-    
+
     /* shell init && register ssd1306 function */
     shell_init();
     shell_register("ssd1306", ssd1306);
     ssd1306_interface_debug_print("ssd1306: welcome to libdriver ssd1306.\n");
-    
+
     /* set the signal */
     signal(SIGINT, a_sig_handler);
-    
+
     while (1)
     {
         /* read uart */
