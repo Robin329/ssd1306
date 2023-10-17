@@ -1,0 +1,6 @@
+*.o
+*.d
+ssd1306_bin
+compile_commands.json
+.vscode-ctags
+.cache
