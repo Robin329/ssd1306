@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2015 - present LibDriver All rights reserved
- *
+ * 
  * The MIT License (MIT)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -19,10 +19,10 @@
  * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
+ * SOFTWARE. 
  *
- * @file      spi.h
- * @brief     spi header file
+ * @file      iic.h
+ * @brief     iic header file
  * @version   1.0.0
  * @author    Shifeng Li
  * @date      2022-11-11
@@ -34,10 +34,9 @@
  * </table>
  */
 
-#ifndef SPI_H
-#define SPI_H
+#ifndef IIC_H
+#define IIC_H
 
-#include <linux/spi/spidev.h>
 #include <unistd.h>
 #include <stdlib.h>
 #include <stdint.h>
@@ -49,147 +48,113 @@ extern "C" {
 #endif
 
 /**
- * @defgroup spi spi function
- * @brief    spi function modules
+ * @defgroup iic iic function
+ * @brief    iic function modules
  * @{
  */
 
 /**
- * @brief spi mode type enumeration definition
- */
-typedef enum
-{
-    SPI_MODE_TYPE_0 = SPI_MODE_0,        /**< mode 0 */
-    SPI_MODE_TYPE_1 = SPI_MODE_1,        /**< mode 1 */
-    SPI_MODE_TYPE_2 = SPI_MODE_2,        /**< mode 2 */
-    SPI_MODE_TYPE_3 = SPI_MODE_3,        /**< mode 3 */
-} spi_mode_type_t;
-
-/**
- * @brief      spi bus init
- * @param[in]  *name points to a spi device name buffer
- * @param[out] *fd points to a spi device handle buffer
- * @param[in]  mode is the spi mode.
- * @param[in]  freq is the spi running frequence
+ * @brief      iic bus init
+ * @param[in]  *name points to an iic device name buffer
+ * @param[out] *fd points to an iic device handle buffer
  * @return     status code
  *             - 0 success
  *             - 1 init failed
  * @note       none
  */
-uint8_t spi_init(char *name, int *fd, spi_mode_type_t mode, uint32_t freq);
+uint8_t iic_init(char *name, int *fd);
 
 /**
- * @brief     spi bus deinit
- * @param[in] fd is the spi handle
+ * @brief     iic bus deinit
+ * @param[in] fd is the iic handle
  * @return    status code
  *            - 0 success
  *            - 1 deinit failed
  * @note      none
  */
-uint8_t spi_deinit(int fd);
+uint8_t iic_deinit(int fd);
 
 /**
- * @brief      spi bus read command
- * @param[in]  fd is the spi handle
+ * @brief      iic bus read command
+ * @param[in]  fd is the iic handle
+ * @param[in]  addr is the iic device write address
  * @param[out] *buf points to a data buffer
  * @param[in]  len is the length of the data buffer
  * @return     status code
  *             - 0 success
  *             - 1 read failed
- * @note       none
+ * @note       addr = device_address_7bits << 1
  */
-uint8_t spi_read_cmd(int fd, uint8_t *buf, uint16_t len);
+uint8_t iic_read_cmd(int fd, uint8_t addr, uint8_t *buf, uint16_t len);
 
 /**
- * @brief      spi bus read
- * @param[in]  fd is the spi handle
- * @param[in]  reg is the spi register address
+ * @brief      iic bus read
+ * @param[in]  fd is the iic handle
+ * @param[in]  addr is the iic device write address
+ * @param[in]  reg is the iic register address
  * @param[out] *buf points to a data buffer
  * @param[in]  len is the length of the data buffer
  * @return     status code
  *             - 0 success
  *             - 1 read failed
- * @note       none
+ * @note       addr = device_address_7bits << 1
  */
-uint8_t spi_read(int fd, uint8_t reg, uint8_t *buf, uint16_t len);
+uint8_t iic_read(int fd, uint8_t addr, uint8_t reg, uint8_t *buf, uint16_t len);
 
 /**
- * @brief      spi bus read address 16
- * @param[in]  fd is the spi handle
- * @param[in]  reg is the spi register address
+ * @brief      iic bus read with 16 bits register address
+ * @param[in]  fd is the iic handle
+ * @param[in]  addr is the iic device write address
+ * @param[in]  reg is the iic register address
  * @param[out] *buf points to a data buffer
  * @param[in]  len is the length of the data buffer
  * @return     status code
  *             - 0 success
  *             - 1 read failed
- * @note       none
+ * @note       addr = device_address_7bits << 1
  */
-uint8_t spi_read_address16(int fd, uint16_t reg, uint8_t *buf, uint16_t len);
+uint8_t iic_read_address16(int fd, uint8_t addr, uint16_t reg, uint8_t *buf, uint16_t len);
 
 /**
- * @brief     spi bus write command
- * @param[in] fd is the spi handle
+ * @brief     iic bus write command
+ * @param[in] fd is the iic handle
+ * @param[in] addr is the iic device write address
  * @param[in] *buf points to a data buffer
  * @param[in] len is the length of the data buffer
  * @return    status code
  *            - 0 success
  *            - 1 write failed
- * @note      none
+ * @note      addr = device_address_7bits << 1
  */
-uint8_t spi_write_cmd(int fd, uint8_t *buf, uint16_t len);
+uint8_t iic_write_cmd(int fd, uint8_t addr, uint8_t *buf, uint16_t len);
 
 /**
- * @brief     spi bus write
- * @param[in] fd is the spi handle
- * @param[in] reg is the spi register address
+ * @brief     iic bus write
+ * @param[in] fd is the iic handle
+ * @param[in] addr is the iic device write address
+ * @param[in] reg is the iic register address
  * @param[in] *buf points to a data buffer
  * @param[in] len is the length of the data buffer
  * @return    status code
  *            - 0 success
  *            - 1 write failed
- * @note      none
+ * @note      addr = device_address_7bits << 1
  */
-uint8_t spi_write(int fd, uint8_t reg, uint8_t *buf, uint16_t len);
+uint8_t iic_write(int fd, uint8_t addr, uint8_t reg, uint8_t *buf, uint16_t len);
 
 /**
- * @brief     spi bus write address 16
- * @param[in] fd is the spi handle
- * @param[in] reg is the spi register address
+ * @brief     iic bus write with 16 bits register address
+ * @param[in] fd is the iic handle
+ * @param[in] addr is the iic device write address
+ * @param[in] reg is the iic register address
  * @param[in] *buf points to a data buffer
  * @param[in] len is the length of the data buffer
  * @return    status code
  *            - 0 success
  *            - 1 write failed
- * @note      none
+ * @note      addr = device_address_7bits << 1
  */
-uint8_t spi_write_address16(int fd, uint16_t reg, uint8_t *buf, uint16_t len);
-
-/**
- * @brief      spi bus write read
- * @param[in]  fd is the spi handle
- * @param[in]  *in_buf points to an input buffer
- * @param[in]  in_len is the input length
- * @param[out] *out_buf points to an output buffer
- * @param[in]  out_len is the output length
- * @return     status code
- *             - 0 success
- *             - 1 write read failed
- * @note       none
- */
-uint8_t spi_write_read(int fd, uint8_t *in_buf, uint32_t in_len, uint8_t *out_buf, uint32_t out_len);
-
-/**
- * @brief      spi transmit
- * @param[in]  fd is the spi handle
- * @param[in]  *tx points to a tx buffer
- * @param[out] *rx points to a rx buffer
- * @param[in]  len is the length of the data buffer
- * @return     status code
- *             - 0 success
- *             - 1 transmit failed
- * @note       none
- */
-uint8_t spi_transmit(int fd, uint8_t *tx, uint8_t *rx, uint16_t len);
+uint8_t iic_write_address16(int fd, uint8_t addr, uint16_t reg, uint8_t *buf, uint16_t len);
 
 /**
  * @}
@@ -199,4 +164,4 @@ uint8_t spi_transmit(int fd, uint8_t *tx, uint8_t *rx, uint16_t len);
 }
 #endif
 
-#endif
+#endif 
